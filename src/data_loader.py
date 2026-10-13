@@ -17,9 +17,11 @@ def load_raw_data(path):
 
     df = pd.read_csv(
         path,
-        sep=r"\s+",
+        sep=",",
         header=None
     )
+
+    print("Columnas detectadas:", len(df.columns))
 
     df.columns = SENSOR_COLUMNS + [TARGET_COLUMN]
 
