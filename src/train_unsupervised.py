@@ -64,8 +64,14 @@ def find_optimal_k(X):
 
 def train_kmeans(X, k):
     """
-    Entrena un modelo K-Means con el número
-    de clusters seleccionado.
+    Entrena un modelo K-Means con el número de clusters seleccionado.
+
+    Parámetros:
+        X: Datos de entrada utilizados para el entrenamiento.
+        k: Número de clusters.
+
+    Retorna:
+        Modelo K-Means entrenado.
     """
 
     modelo = KMeans(
@@ -229,7 +235,7 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 
-    print("\nVisualizando DBSCAN con eps=5.0...")
+
 
     modelo_dbscan_final = train_dbscan(
         X,
@@ -252,13 +258,7 @@ if __name__ == "__main__":
     print("DBSCAN guardado en:")
     print(models_dir / "dbscan.pkl")
 
-    etiquetas_finales = modelo_dbscan_final.labels_
-
-    # Reducir las 24 variables a 2 dimensiones
-    pca = PCA(n_components=2)
-
-    X_pca = pca.fit_transform(X)
-
+    
     print("\n==============================")
     print("COMPARACIÓN DE MODELOS")
     print("==============================")

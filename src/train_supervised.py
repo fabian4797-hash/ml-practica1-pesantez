@@ -67,7 +67,13 @@ def evaluate_model(model, X_test, y_test):
 
 
 def main():
+    """
+    Ejecuta el flujo principal del entrenamiento supervisado.
 
+    Carga y prepara los datos, divide el dataset en entrenamiento
+    y prueba, entrena los modelos Random Forest y SVM, evalúa su
+    desempeño, guarda los modelos y compara sus resultados.
+    """
     # Ruta del dataset original
     project_dir = Path(__file__).resolve().parent.parent
 
