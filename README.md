@@ -173,3 +173,50 @@ benchmark_latency.json
 ## Autor
 
 Práctica 1 - Machine Learning
+
+## Práctica 2 — Sesión 2: Matriz de costos
+
+### Objetivo
+Comparar el costo de los errores de Random Forest con el de un
+clasificador trivial que siempre predice 0.
+
+### Clases y supuestos económicos
+- Clase 1: giro leve a la izquierda (Slight-Left-Turn).
+- Clase 0: todos los demás movimientos.
+- Falso positivo (FP): predecir un giro leve a la izquierda cuando
+  corresponde otro movimiento. Costo asignado: $50.
+- Falso negativo (FN): no detectar un giro leve a la izquierda real.
+  Costo asignado: $500.
+
+Los valores son supuestos establecidos por la guía, no costos medidos
+en un robot real. Representan un escenario en el que omitir un caso
+positivo tiene un costo diez veces mayor que una falsa detección.
+Los aciertos no añaden costo en la fórmula utilizada. No se incluyen
+costos de entrenamiento, implementación ni mantenimiento.
+
+### Cálculo
+Costo total = FP × $50 + FN × $500
+
+Ambos clasificadores se evaluaron sobre los mismos 1.092 registros
+de prueba, conservando la partición utilizada en la sesión 1.
+
+| Modelo | FP | FN | Costo total |
+|---|---:|---:|---:|
+| Random Forest | 1 | 3 | $1.550 |
+| Siempre 0 | 0 | 66 | $33.000 |
+
+Ahorro = $33.000 − $1.550 = $31.450.
+
+### Conclusión
+Random Forest reduce el costo de los errores en $31.450 respecto al
+clasificador trivial, principalmente porque disminuye los falsos
+negativos de 66 a 3. Este resultado corresponde únicamente al conjunto
+de prueba y a los costos supuestos por la guía; no representa un
+ahorro real medido ni una estimación anual.
+
+### Ejecución
+Desde la carpeta principal del proyecto, en PowerShell:
+
+```powershell
+.\venv\Scripts\python.exe .\src\p2_02_costos.py
+```
