@@ -190,7 +190,7 @@ clasificador trivial que siempre predice 0.
 
 Los valores son supuestos establecidos por la guía, no costos medidos
 en un robot real. Representan un escenario en el que omitir un caso
-positivo tiene un costo diez veces mayor que una falsa detección.
+positivo tiene un costo diez veces mayor que una falsa detección.git add README.md notebooks/p2_01_metricas.ipynb src/p2_02_costos.py
 Los aciertos no añaden costo en la fórmula utilizada. No se incluyen
 costos de entrenamiento, implementación ni mantenimiento.
 
@@ -219,4 +219,54 @@ Desde la carpeta principal del proyecto, en PowerShell:
 
 ```powershell
 .\venv\Scripts\python.exe .\src\p2_02_costos.py
+```
+
+## Práctica 2 — Sesión 3: Ajuste del umbral
+
+### Procedimiento
+Se obtuvieron probabilidades de la clase positiva (giro leve a la
+izquierda) mediante predict_proba y se evaluaron 17 umbrales,
+desde 0,10 hasta 0,90, con pasos de 0,05.
+
+Se aplicó la regla: predecir 1 cuando la probabilidad sea mayor
+o igual al umbral.
+
+Como apoyo metodológico, la partición original de entrenamiento
+se dividió de forma estratificada en 3.491 registros de entrenamiento
+y 873 de validación. Los 1.092 registros de prueba se reservaron
+para comprobar el umbral seleccionado.
+
+### Selección en validación
+Se utilizó la fórmula: costo = FP × $50 + FN × $500.
+
+Los umbrales 0,10 y 0,35 empataron con el costo mínimo de $600.
+Se seleccionó 0,10 mediante una regla de desempate previamente
+definida: elegir el menor umbral. Esta regla es una decisión de
+implementación, no un requisito de la guía.
+
+Con 0,50 el costo fue $1.000; la reducción en validación fue $400.
+
+### Comprobación en prueba
+Se utilizó el mismo modelo entrenado, sin reajustar el umbral.
+
+| Umbral | FP | FN | Costo |
+|---|---:|---:|---:|
+| 0,50 | 1 | 3 | $1.550 |
+| 0,10 | 24 | 0 | $1.200 |
+
+### Conclusión
+El umbral 0,10 redujo el costo en prueba en $350 respecto a 0,50.
+Aunque aumentaron los falsos positivos, se eliminaron los tres
+falsos negativos, cuyo costo individual es mayor.
+Estos resultados corresponden a los datos evaluados y a los costos
+supuestos por la guía; no garantizan el mismo ahorro en datos futuros.
+
+### Gráfico
+![Costo vs. umbral en validación](reports/figures/threshold_tuning.png)
+
+### Ejecución
+Desde la carpeta principal del proyecto:
+
+```powershell
+.\venv\Scripts\python.exe .\src\p2_03_threshold.py
 ```
