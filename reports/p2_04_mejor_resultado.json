@@ -1,0 +1,16 @@
+{
+    "estudio": "p2_random_forest_f1",
+    "metrica": "F1 de la clase positiva en validacion",
+    "umbral": 0.5,
+    "pruebas_completadas": 20,
+    "mejor_trial": 0,
+    "mejor_f1_validacion": 0.9803921568627451,
+    "mejores_hiperparametros": {
+        "n_estimators": 100,
+        "max_depth": null,
+        "min_samples_leaf": 1
+    },
+    "random_state_modelo": 42,
+    "registros_entrenamiento": 3491,
+    "registros_validacion": 873
+}

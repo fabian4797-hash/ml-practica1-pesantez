@@ -270,3 +270,57 @@ Desde la carpeta principal del proyecto:
 ```powershell
 .\venv\Scripts\python.exe .\src\p2_03_threshold.py
 ```
+
+## Práctica 2 — Sesión 4: Optimización con Optuna
+
+### Procedimiento
+Se ejecutó un estudio de Optuna con 20 pruebas completadas para
+maximizar el F1 de la clase positiva: Slight-Left-Turn.
+
+Cada prueba entrenó un Random Forest con una configuración distinta
+o repetida de hiperparámetros, utilizando 3491 registros de
+entrenamiento y los mismos 873 registros de validación.
+
+Se mantuvo un umbral de decisión de 0,50. El conjunto de prueba
+no se utilizó durante la optimización.
+
+### Espacio de búsqueda
+- n_estimators: 50, 100, 150 o 200.
+- max_depth: None, 5, 10, 15 o 20.
+- min_samples_leaf: entre 1 y 4.
+
+Estos rangos son decisiones de implementación.
+
+### Mejor resultado
+- Mejor trial: 0.
+- F1 en validación: 0,980392.
+- n_estimators: 100.
+- max_depth: None, sin límite explícito.
+- min_samples_leaf: 1.
+- random_state del modelo: 42.
+
+### Conclusión
+El trial 0 obtuvo el mayor F1 observado entre las configuraciones
+evaluadas. Las pruebas posteriores no superaron ese resultado.
+
+La configuración seleccionada coincide con la utilizada en la
+sesión 3; por tanto, no se observó una mejora frente a esa
+configuración bajo la misma validación y el umbral de 0,50.
+
+El resultado no garantiza que sea la mejor configuración posible
+ni representa una evaluación final sobre el conjunto de prueba.
+
+### Archivos
+- src/p2_04_optuna.py: código del estudio.
+- reports/p2_04_optuna.db: estudio y registro de las pruebas.
+- reports/p2_04_mejor_resultado.json: resumen del mejor resultado.
+
+El estudio y el JSON no contienen un modelo entrenado exportado.
+
+### Ejecución
+Desde la carpeta principal del proyecto:
+
+    .\venv\Scripts\python.exe .\src\p2_04_optuna.py
+
+Al ejecutar nuevamente, el script carga el estudio existente y,
+si ya tiene 20 pruebas completadas, no añade nuevas pruebas.
