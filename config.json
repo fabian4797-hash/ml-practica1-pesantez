@@ -1,0 +1,45 @@
+{
+    "modelo": "RandomForestClassifier",
+    "clase_positiva": "Slight-Left-Turn",
+    "variables": [
+        "US1",
+        "US2",
+        "US3",
+        "US4",
+        "US5",
+        "US6",
+        "US7",
+        "US8",
+        "US9",
+        "US10",
+        "US11",
+        "US12",
+        "US13",
+        "US14",
+        "US15",
+        "US16",
+        "US17",
+        "US18",
+        "US19",
+        "US20",
+        "US21",
+        "US22",
+        "US23",
+        "US24"
+    ],
+    "hiperparametros": {
+        "n_estimators": 100,
+        "max_depth": null,
+        "min_samples_leaf": 1,
+        "random_state": 42,
+        "n_jobs": -1
+    },
+    "umbral": 0.5,
+    "regla_decision": "probabilidad >= umbral",
+    "seleccion": {
+        "estudio": "p2_random_forest_f1",
+        "mejor_trial": 0,
+        "metrica": "F1 de la clase positiva en validacion",
+        "valor": 0.9803921568627451
+    }
+}

@@ -324,3 +324,91 @@ Desde la carpeta principal del proyecto:
 
 Al ejecutar nuevamente, el script carga el estudio existente y,
 si ya tiene 20 pruebas completadas, no añade nuevas pruebas.
+
+
+## Práctica 2 — Sesión 5: Análisis e interpretación de Optuna
+
+### Análisis del estudio
+Se cargó el estudio de la sesión 4, con 20 pruebas completadas.
+El mejor F1 en validación fue 0,980392, alcanzado inicialmente
+por el trial 0 y empatado por otras pruebas.
+
+Se generaron los gráficos de historia de optimización e importancia
+de hiperparámetros. La historia muestra que ninguna prueba posterior
+superó el resultado inicial.
+
+Con el evaluador fANOVA y semilla 42, las importancias aproximadas
+fueron:
+- min_samples_leaf: 0,48.
+- max_depth: 0,43.
+- n_estimators: 0,10.
+
+Son estimaciones relativas a las pruebas y rangos evaluados.
+No indican que aumentar un hiperparámetro mejore el modelo.
+Los valores mostrados suman 1,01 por el redondeo.
+
+### Configuración y entrenamiento final
+Se exportó config.json con las variables, la clase positiva,
+los hiperparámetros y la regla de decisión.
+
+Configuración seleccionada:
+- n_estimators: 100.
+- max_depth: None.
+- min_samples_leaf: 1.
+- random_state: 42.
+- Umbral: 0,50; se predice 1 cuando probabilidad >= umbral.
+
+Como decisión metodológica, el modelo final se entrenó con los
+4364 registros de la partición original train, incluidos los
+873 utilizados anteriormente para validación.
+Los 1092 registros de prueba quedaron fuera del entrenamiento.
+
+Se guardó el modelo junto con su configuración de inferencia en
+models/p2_random_forest_final.joblib.
+
+### Comparación en prueba
+Se reprodujo el Random Forest original y se evaluaron ambos modelos
+con los mismos datos de prueba y la misma regla de umbral.
+
+La comparación usa probabilidad >= 0,50 para ambos modelos;
+el script de la sesión 2 utilizaba predict().
+
+| Métrica | Original | Seleccionado por Optuna |
+|---|---:|---:|
+| Accuracy | 0,9963 | 0,9963 |
+| Precisión | 0,9844 | 0,9844 |
+| Recall | 0,9545 | 0,9545 |
+| F1 | 0,9692 | 0,9692 |
+| TN | 1025 | 1025 |
+| FP | 1 | 1 |
+| FN | 3 | 3 |
+| TP | 63 | 63 |
+| Costo ($) | 1550 | 1550 |
+
+Costo = FP × $50 + FN × $500.
+
+### Conclusión
+No se observó una mejora respecto al modelo original.
+La configuración seleccionada coincide con la original y ambos
+modelos produjeron exactamente las mismas predicciones en prueba.
+
+El F1 de selección en validación fue 0,9804; el F1 del modelo
+reentrenado en prueba fue 0,9692. Corresponden a evaluaciones distintas.
+
+No se reajustaron los hiperparámetros ni el umbral con los resultados
+de prueba. Los resultados no garantizan el mismo desempeño futuro.
+
+### Archivos
+- src/p2_05_optuna_analisis.py
+- config.json
+- reports/figures/optuna_historia.html
+- reports/figures/optuna_importancias.html
+- models/p2_random_forest_final.joblib
+- reports/p2_05_comparacion.csv
+
+Los gráficos HTML se descargan y abren en un navegador.
+
+### Ejecución
+Desde la carpeta principal del proyecto:
+
+    .\venv\Scripts\python.exe .\src\p2_05_optuna_analisis.py
