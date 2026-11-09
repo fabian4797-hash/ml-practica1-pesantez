@@ -412,3 +412,37 @@ Los gráficos HTML se descargan y abren en un navegador.
 Desde la carpeta principal del proyecto:
 
     .\venv\Scripts\python.exe .\src\p2_05_optuna_analisis.py
+
+
+
+## Práctica 2 — Sesión 7: Entorno de RL personalizado
+
+Se creó `src/p2_07_entorno_rl.py`, un entorno lineal de cinco posiciones.
+El agente comienza en la posición 0 y busca llegar a la meta, ubicada
+en la posición 4.
+
+- Observaciones: posición actual del agente (0 a 4).
+- Acciones: 0 = izquierda; 1 = derecha.
+- Recompensa: −1 por cada movimiento y +10 al alcanzar la meta.
+- Finalización: el episodio termina al llegar a la meta o se trunca
+  al alcanzar diez pasos.
+- Representación: `A` indica al agente y `G` la meta.
+
+Se probaron cinco episodios con acciones aleatorias. Los resultados
+varían porque el agente no aprende de un episodio a otro.
+
+### Ejecución
+
+    .\venv\Scripts\python.exe .\src\p2_07_entorno_rl.py
+
+    Resultados de los cinco episodios:
+| Episodio | Resultado | Recompensa |
+|---:|---|---:|
+| 1 | Llegó a la meta | 3 |
+| 2 | Límite de pasos | -10 |
+| 3 | Límite de pasos | -10 |
+| 4 | Llegó a la meta | 5 |
+| 5 | Límite de pasos | -10 |
+
+La recompensa promedio fue -4,4. Las acciones aleatorias no garantizan
+que el agente alcance la meta.
