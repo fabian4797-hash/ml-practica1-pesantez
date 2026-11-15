@@ -10,6 +10,7 @@ NUM_EPISODIOS = 10
 
 
 def evaluar_ppo(entorno, modelo, semilla):
+    """Ejecuta PPO en un episodio y devuelve la recompensa acumulada."""
     observacion, _ = entorno.reset(seed=semilla)
     terminado = False
     truncado = False
@@ -26,6 +27,7 @@ def evaluar_ppo(entorno, modelo, semilla):
 
 
 def evaluar_controlador_reglas(entorno, semilla):
+    """Evalúa la regla basada en el ángulo durante un episodio."""
     observacion, _ = entorno.reset(seed=semilla)
     terminado = False
     truncado = False
@@ -44,6 +46,7 @@ def evaluar_controlador_reglas(entorno, semilla):
 
 
 def resumir(recompensas):
+    """Calcula las recompensas mínima, promedio y máxima."""
     return {
         "mínima": min(recompensas),
         "promedio": mean(recompensas),
@@ -52,6 +55,7 @@ def resumir(recompensas):
 
 
 def main():
+    """Compara PPO con el controlador clásico y guarda tabla y reporte."""
     raiz = Path(__file__).resolve().parent.parent
     ruta_modelo = raiz / "models" / "ppo_cartpole.zip"
     directorio_reportes = raiz / "reports"

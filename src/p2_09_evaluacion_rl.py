@@ -10,6 +10,7 @@ NUM_EPISODIOS = 10
 
 
 def ejecutar_episodio_ppo(entorno, modelo, semilla):
+    """Evalúa PPO durante un episodio y devuelve su recompensa acumulada."""
     observacion, _ = entorno.reset(seed=semilla)
     terminado = False
     truncado = False
@@ -26,6 +27,7 @@ def ejecutar_episodio_ppo(entorno, modelo, semilla):
 
 
 def ejecutar_episodio_aleatorio(entorno, semilla):
+    """Ejecuta acciones aleatorias en un episodio y suma sus recompensas."""
     entorno.action_space.seed(semilla + 1000)
     observacion, _ = entorno.reset(seed=semilla)
     terminado = False
@@ -41,6 +43,7 @@ def ejecutar_episodio_aleatorio(entorno, semilla):
 
 
 def resumir_recompensas(recompensas):
+    """Calcula las recompensas mínima, promedio y máxima de una lista."""
     return {
         "mínima": min(recompensas),
         "promedio": mean(recompensas),
@@ -49,6 +52,7 @@ def resumir_recompensas(recompensas):
 
 
 def main():
+    """Compara PPO con acciones aleatorias y guarda los resultados."""
     raiz_proyecto = Path(__file__).resolve().parent.parent
     ruta_modelo = raiz_proyecto / "models" / "ppo_cartpole.zip"
     directorio_reportes = raiz_proyecto / "reports"

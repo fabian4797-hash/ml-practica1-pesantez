@@ -8,6 +8,7 @@ from stable_baselines3.common.monitor import Monitor
 
 
 def main():
+    """Entrena PPO en CartPole y guarda el modelo y la curva de recompensas."""
     raiz_proyecto = Path(__file__).resolve().parent.parent
 
     directorio_modelos = raiz_proyecto / "models"

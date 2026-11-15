@@ -1,46 +1,72 @@
-# Práctica 1 - Machine Learning
+# Prácticas 1 y 2 — Machine Learning
 
 ## Descripción del proyecto
 
-Proyecto de Machine Learning desarrollado como parte de la Práctica 1.
+Este repositorio reúne el trabajo de las prácticas 1 y 2 de Machine Learning.
 
-El objetivo es analizar un conjunto de datos de lecturas de sensores,
-realizar un proceso de exploración y preprocesamiento, entrenar modelos
-de aprendizaje supervisado y no supervisado, comparar su desempeño y
-analizar la latencia de inferencia.
+La Práctica 1 analiza lecturas de sensores de un robot Wall-Following:
+explora y preprocesa los datos, entrena modelos supervisados y no
+supervisados, compara su desempeño y mide la latencia de inferencia.
 
-Se utilizaron modelos de clasificación supervisada y algoritmos de
-clustering para identificar patrones presentes en las lecturas de los
-sensores.
+La Práctica 2 amplía ese trabajo con análisis de costos de clasificación,
+selección de umbral, optimización de hiperparámetros con Optuna y
+aprendizaje por refuerzo. Para la parte de RL se utiliza CartPole, un
+entorno simulado independiente del dataset de sensores.
 
 ## Estructura del repositorio
 
 ```text
 ml-practica1-pesantez/
-│
+├── config.json
 ├── data/
 │   ├── raw/
 │   └── processed/
-│
+│       └── dataset.parquet
 ├── models/
 │   ├── random_forest.pkl
 │   ├── svm.pkl
 │   ├── kmeans.pkl
-│   └── dbscan.pkl
-│
+│   ├── dbscan.pkl
+│   ├── p2_random_forest_final.joblib
+│   └── ppo_cartpole.zip
 ├── notebooks/
 │   ├── 01_eda.ipynb
 │   ├── 02_supervised.ipynb
-│   └── 03_unsupervised.ipynb
-│
+│   ├── 03_unsupervised.ipynb
+│   ├── p2_01_metricas.ipynb
+│   └── p2_06_gymnasium.ipynb
+├── reports/
+│   ├── figures/
+│   │   ├── threshold_tuning.png
+│   │   ├── optuna_historia.html
+│   │   ├── optuna_importancias.html
+│   │   └── ppo_cartpole_recompensas.html
+│   ├── p2_04_optuna.db
+│   ├── p2_04_mejor_resultado.json
+│   ├── p2_05_comparacion.csv
+│   ├── p2_09_evaluacion_rl.csv
+│   ├── p2_09_evaluacion_rl.md
+│   ├── p2_10_comparacion.csv
+│   └── p2_10_comparacion.md
 ├── src/
 │   ├── data_loader.py
 │   ├── train_supervised.py
-│   └── train_unsupervised.py
-│
+│   ├── train_unsupervised.py
+│   ├── p2_02_costos.py
+│   ├── p2_03_threshold.py
+│   ├── p2_04_optuna.py
+│   ├── p2_05_optuna_analisis.py
+│   ├── p2_07_entorno_rl.py
+│   ├── p2_08_entrenamiento_rl.py
+│   ├── p2_09_evaluacion_rl.py
+│   └── p2_10_comparacion.py
 ├── benchmark_latency.json
 ├── requirements.txt
 └── README.md
+```
+
+La carpeta `reports/rl_monitor/` se crea al ejecutar el entrenamiento PPO y
+contiene los registros de recompensas por episodio.
 
 ## Instalación y ejecución
 
@@ -169,10 +195,29 @@ benchmark_latency.json
 - Joblib
 - PyArrow
 - Jupyter Notebook
+- Gymnasium
+- Stable-Baselines3
+- Optuna
+- Plotly
 
 ## Autor
 
 Práctica 1 - Machine Learning
+
+## Práctica 2 — Evaluación de factibilidad técnica y optimización
+
+La Práctica 2 utiliza la clase `Slight-Left-Turn` como clase positiva y
+las lecturas `US1` a `US24` como variables de entrada. Las primeras
+sesiones estudian clasificación binaria y costos; las sesiones de RL
+exploran CartPole como simulación separada del dataset original.
+
+### Sesión 1: métricas de clasificación
+
+Se cargó `data/processed/dataset.parquet`, se definió la clasificación
+binaria, se mantuvo una partición estratificada y se entrenó un Random
+Forest. Se calcularon accuracy, precision, recall, F1 y matriz de
+confusión, y se comparó el resultado con un clasificador trivial que
+siempre predice 0. El desarrollo está en `notebooks/p2_01_metricas.ipynb`.
 
 ## Práctica 2 — Sesión 2: Matriz de costos
 
@@ -190,7 +235,8 @@ clasificador trivial que siempre predice 0.
 
 Los valores son supuestos establecidos por la guía, no costos medidos
 en un robot real. Representan un escenario en el que omitir un caso
-positivo tiene un costo diez veces mayor que una falsa detección.git add README.md notebooks/p2_01_metricas.ipynb src/p2_02_costos.py
+positivo tiene un costo diez veces mayor que una falsa detección.
+
 Los aciertos no añaden costo en la fórmula utilizada. No se incluyen
 costos de entrenamiento, implementación ni mantenimiento.
 
@@ -415,6 +461,15 @@ Desde la carpeta principal del proyecto:
 
 
 
+## Práctica 2 — Sesión 6: Exploración de CartPole
+
+Se exploró `CartPole-v1` de Gymnasium y su ciclo de interacción: observar
+el estado, escoger una acción y recibir una recompensa. Se ejecutaron
+cinco episodios con acciones aleatorias; sus recompensas totales fueron
+20, 12, 31, 31 y 21, con un promedio de 23. El notebook es
+`notebooks/p2_06_gymnasium.ipynb`. Para abrir el entorno visual, instala
+`gymnasium[classic-control]` mediante `requirements.txt`.
+
 ## Práctica 2 — Sesión 7: Entorno de RL personalizado
 
 Se creó `src/p2_07_entorno_rl.py`, un entorno lineal de cinco posiciones.
@@ -446,3 +501,60 @@ varían porque el agente no aprende de un episodio a otro.
 
 La recompensa promedio fue -4,4. Las acciones aleatorias no garantizan
 que el agente alcance la meta.
+
+## Práctica 2 — Sesión 8: Entrenamiento de PPO
+
+Se entrenó un agente PPO en CartPole con un presupuesto solicitado de
+10.000 pasos. Stable-Baselines3 completó 10.240 interacciones porque
+PPO recopila experiencias en bloques. El promedio de recompensa de los
+últimos diez episodios de entrenamiento fue 99,2.
+
+- Script: `src/p2_08_entrenamiento_rl.py`.
+- Modelo: `models/ppo_cartpole.zip`.
+- Curva de recompensas: `reports/figures/ppo_cartpole_recompensas.html`.
+
+## Práctica 2 — Sesión 9: Evaluación de PPO
+
+Se evaluó el modelo durante diez episodios y se comparó con acciones
+aleatorias. La tabla por episodio está en
+`reports/p2_09_evaluacion_rl.csv`; el reporte se guarda en
+`reports/p2_09_evaluacion_rl.md`.
+
+| Agente | Recompensa mínima | Promedio | Recompensa máxima |
+|---|---:|---:|---:|
+| PPO | 249 | 395,90 | 500 |
+| Acciones aleatorias | 14 | 21,90 | 43 |
+
+En estos episodios, PPO superó al agente aleatorio por 374 puntos de
+recompensa promedio.
+
+## Práctica 2 — Sesión 10: Comparación con un controlador clásico
+
+Se comparó PPO con un controlador basado en reglas que elige la acción
+según el ángulo del péndulo. Ambos se evaluaron durante diez episodios.
+
+| Método | Recompensa mínima | Promedio | Recompensa máxima |
+|---|---:|---:|---:|
+| PPO | 219 | 357,10 | 500 |
+| Controlador basado en reglas | 34 | 48,00 | 58 |
+
+En esta evaluación, PPO superó al controlador clásico por 309,10 puntos
+de recompensa promedio. El controlador por reglas es sencillo y no
+requiere entrenamiento, pero utiliza solo el ángulo; PPO requiere un
+proceso de entrenamiento y aprovecha la observación completa. Las
+sesiones 9 y 10 utilizaron distintas semillas; por eso sus promedios de
+PPO corresponden a evaluaciones separadas.
+
+### Ejecución de las sesiones de RL
+
+Desde la carpeta principal del proyecto, con el entorno virtual activado:
+
+```powershell
+python .\src\p2_07_entorno_rl.py
+python .\src\p2_08_entrenamiento_rl.py
+python .\src\p2_09_evaluacion_rl.py
+python .\src\p2_10_comparacion.py
+```
+
+Las sesiones 9 y 10 requieren que exista `models/ppo_cartpole.zip`,
+creado en la sesión 8.
